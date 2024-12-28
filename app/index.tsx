@@ -1,95 +1,80 @@
-import * as React from 'react';
-import { View } from 'react-native';
-import Animated, { FadeInUp, FadeOutDown, LayoutAnimationConfig } from 'react-native-reanimated';
-import { Info } from '~/lib/icons/Info';
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
-import { Button } from '~/components/ui/button';
+import InputBeam from "~/components/InputBeam";
+import LensTable from "~/components/LensTable";
+import OutputBeam from "~/components/OutputBeam";
+import Probe from "~/components/Probe";
+
+import { TransformBeam } from "~/lib/calculate";
+import { Lens } from "~/lib/types";
+
+import { useMemo, useState } from "react";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '~/components/ui/card';
-import { Progress } from '~/components/ui/progress';
-import { Text } from '~/components/ui/text';
-import { Tooltip, TooltipContent, TooltipTrigger } from '~/components/ui/tooltip';
+  KeyboardAvoidingView,
+  ScrollView,
+  useWindowDimensions,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const GITHUB_AVATAR_URI =
-  'https://i.pinimg.com/originals/ef/a2/8d/efa28d18a04e7fa40ed49eeb0ab660db.jpg';
+const MIN_COLUMN_WIDTHS = [120, 120, 100, 120];
 
-export default function Screen() {
-  const [progress, setProgress] = React.useState(78);
+export default function GaussianBeamCalculator() {
+  const default_lens = { position: 50, focus: 50 };
 
-  function updateProgressValue() {
-    setProgress(Math.floor(Math.random() * 100));
+  const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+  const [wavelength, setWavelength] = useState(1064);
+  const [input_beam, setInputBeam] = useState({ position: 0, waist: 50 });
+  // const [lenses, setLenses] = useState<Lens[]>([default_lens]);
+  const [lenses, setLenses] = useState<Lens[]>([]);
+  const [probe_position, setProbePosition] = useState(0);
+  const columnWidths = useMemo(() => {
+    return MIN_COLUMN_WIDTHS.map((minWidth) => {
+      const evenWidth = width / MIN_COLUMN_WIDTHS.length;
+      return evenWidth > minWidth ? evenWidth : minWidth;
+    });
+  }, [width]);
+
+  let output_beam = input_beam;
+  let probe_beam = output_beam;
+  for (const lens of lenses) {
+    output_beam = TransformBeam(output_beam, lens, wavelength);
+    if (probe_position > lens.position) {
+      probe_beam = output_beam;
+    }
   }
   return (
-    <View className='flex-1 justify-center items-center gap-5 p-6 bg-secondary/30'>
-      <Card className='w-full max-w-sm p-6 rounded-2xl'>
-        <CardHeader className='items-center'>
-          <Avatar alt="Rick Sanchez's Avatar" className='w-24 h-24'>
-            <AvatarImage source={{ uri: GITHUB_AVATAR_URI }} />
-            <AvatarFallback>
-              <Text>RS</Text>
-            </AvatarFallback>
-          </Avatar>
-          <View className='p-3' />
-          <CardTitle className='pb-2 text-center'>Rick Sanchez</CardTitle>
-          <View className='flex-row'>
-            <CardDescription className='text-base font-semibold'>Scientist</CardDescription>
-            <Tooltip delayDuration={150}>
-              <TooltipTrigger className='px-2 pb-0.5 active:opacity-50'>
-                <Info size={14} strokeWidth={2.5} className='w-4 h-4 text-foreground/70' />
-              </TooltipTrigger>
-              <TooltipContent className='py-2 px-4 shadow'>
-                <Text className='native:text-lg'>Freelance</Text>
-              </TooltipContent>
-            </Tooltip>
-          </View>
-        </CardHeader>
-        <CardContent>
-          <View className='flex-row justify-around gap-3'>
-            <View className='items-center'>
-              <Text className='text-sm text-muted-foreground'>Dimension</Text>
-              <Text className='text-xl font-semibold'>C-137</Text>
-            </View>
-            <View className='items-center'>
-              <Text className='text-sm text-muted-foreground'>Age</Text>
-              <Text className='text-xl font-semibold'>70</Text>
-            </View>
-            <View className='items-center'>
-              <Text className='text-sm text-muted-foreground'>Species</Text>
-              <Text className='text-xl font-semibold'>Human</Text>
-            </View>
-          </View>
-        </CardContent>
-        <CardFooter className='flex-col gap-3 pb-0'>
-          <View className='flex-row items-center overflow-hidden'>
-            <Text className='text-sm text-muted-foreground'>Productivity:</Text>
-            <LayoutAnimationConfig skipEntering>
-              <Animated.View
-                key={progress}
-                entering={FadeInUp}
-                exiting={FadeOutDown}
-                className='w-11 items-center'
-              >
-                <Text className='text-sm font-bold text-sky-600'>{progress}%</Text>
-              </Animated.View>
-            </LayoutAnimationConfig>
-          </View>
-          <Progress value={progress} className='h-2' indicatorClassName='bg-sky-600' />
-          <View />
-          <Button
-            variant='outline'
-            className='shadow shadow-foreground/5'
-            onPress={updateProgressValue}
-          >
-            <Text>Update</Text>
-          </Button>
-        </CardFooter>
-      </Card>
-    </View>
+    <ScrollView bounces={false} showsHorizontalScrollIndicator={false}>
+      <KeyboardAvoidingView style={{ flex: 1 }}>
+        <InputBeam
+          input_beam={input_beam}
+          setInputBeam={setInputBeam}
+          wavelength={wavelength}
+          setWavelength={setWavelength}
+        />
+
+        <LensTable
+          lenses={lenses}
+          setLenses={setLenses}
+          input_beam_position={input_beam.position}
+          default_lens={default_lens}
+        />
+
+        <OutputBeam
+          output_beam={output_beam}
+          wavelength={wavelength}
+          position_last_lens={
+            lenses.length > 0
+              ? lenses[lenses.length - 1].position
+              : input_beam.position
+          }
+        />
+
+        <Probe
+          probe_position={probe_position}
+          setProbePosition={setProbePosition}
+          probe_beam={probe_beam}
+          wavelength={wavelength}
+        />
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }

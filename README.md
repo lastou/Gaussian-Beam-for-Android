@@ -1,16 +1,38 @@
-# Starter base
+# Gaussian Beam for Android
 
-A starting point to help you set up your project quickly and use the common components provided by `react-native-reusables`. The idea is to make it easier for you to get started.
+## Development
 
-## Features
+### Build APK
 
-- NativeWind v4
-- Dark and light mode
-    - Android Navigation Bar matches mode
-    - Persistant mode
-- Common components
-    - ThemeToggle, Avatar, Button, Card, Progress, Text, Tooltip
+1. `npx expo prebuild --clean`
 
-<img src="https://github.com/mrzachnugent/react-native-reusables/assets/63797719/42c94108-38a7-498b-9c70-18640420f1bc"
-     alt="starter-base-template"
-     style="width:270px;" />
+2. follow the instruction to sign the app using your own key
+    https://docs.expo.dev/guides/local-app-production/
+
+3. `cd android && ./gradlew assembleRelease`
+    https://stackoverflow.com/questions/35935060/how-can-i-generate-an-apk-that-can-run-without-server-with-react-native/46170797#46170797
+
+### Useful Commands
+
+[Tools for development](https://docs.expo.dev/develop/tools/)
+> `npx expo-doctor`  
+> `npx expo install package-name`  
+> `npx expo run:android`  
+> `npx expo prebuild --clean`
+
+```
+npx react-native doctor
+```
+
+###  Trouble Shooting
+
+- react-native doctor can't locale Android SDK
+
+    https://stackoverflow.com/questions/62797240/reactnative-cant-locate-android-sdk
+    > make sure that the Android SDK Command-line Tools (latest) was installed in the Android Studio Settings.
+
+- Execution failed for task ':react-native-reanimated:configureCMakeDebug[arm64-v8a]'
+    https://stackoverflow.com/questions/73904485/task-react-native-reanimatedconfigurecmakedebugarm64-v8a-failed
+    > NDK has a limited number of path characters
+
+    Move the project to a shorter directory, for example, directly under `C:\`
