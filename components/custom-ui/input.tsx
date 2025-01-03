@@ -12,6 +12,7 @@ export default function Input({
   [key: string]: any;
 }) {
   const [value_disp, setValueDisp] = useState(String(value));
+  const [value_prev, setValuePrev] = useState(value);
 
   function handleChangeValueDisp(v_disp: string) {
     // filter non-numeric characters
@@ -19,8 +20,14 @@ export default function Input({
     setValueDisp(v_disp);
   }
   function handleChangeValue(v: number) {
+    // if value is the same as previous, don't update
+    if (v === value_prev) return;
+
+    // update real value
     setValue(v);
-    // update display value to match value
+    // update previous value to current value
+    setValuePrev(v);
+    // update display value to match real value
     setValueDisp(String(v));
   }
 

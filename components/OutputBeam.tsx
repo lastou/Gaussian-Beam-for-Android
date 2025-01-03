@@ -1,23 +1,9 @@
-import { Badge } from "~/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
-import { Text } from "~/components/ui/text";
+import Table from "./custom-ui/table";
+
+import Text from "~/components/custom-ui/text";
 
 import { RayleighRange } from "~/lib/calculate";
 import { Beam } from "~/lib/types";
-
-import { ScrollView } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-import { FlashList } from "@shopify/flash-list";
-
-const MIN_COLUMN_WIDTHS = [120, 120, 100, 120];
 
 export default function OutputBeam({
   output_beam,
@@ -30,92 +16,48 @@ export default function OutputBeam({
 }) {
   const columns = [
     {
-      key: "optics",
-      label: "Optics",
+      key: "waist",
+      label: <Text className="font-bold">Waist (um)</Text>,
+      width: 76,
     },
     {
       key: "position",
-      label: "Waist position(mm)",
+      label: <Text className="font-bold">Waist Position (mm)</Text>,
+      width: 84,
     },
     {
       key: "relative_position",
-      label: "Relative position(mm)",
+      label: <Text className="font-bold">Relative Position (mm)</Text>,
+      width: 90,
     },
-    {
-      key: "waist",
-      label: "Waist(um)",
-    },
+
     {
       key: "rayleigh_range",
-      label: "Rayleigh range(mm)",
+      label: <Text className="font-bold">Rayleigh Range (mm)</Text>,
+      width: 90,
     },
   ];
 
   const items = [
     {
       key: "output_beam",
-      optics: "Output beam",
-      position: output_beam.position.toFixed(3),
-      relative_position: (output_beam.position - position_last_lens).toFixed(3),
-      waist: output_beam.waist.toFixed(3),
-      rayleigh_range: RayleighRange(output_beam.waist, wavelength).toFixed(3),
+      waist: <Text>{output_beam.waist.toFixed(3)}</Text>,
+      position: <Text>{output_beam.position.toFixed(3)}</Text>,
+      relative_position: (
+        <Text>{(output_beam.position - position_last_lens).toFixed(3)}</Text>
+      ),
+      rayleigh_range: (
+        <Text>{RayleighRange(output_beam.waist, wavelength).toFixed(3)}</Text>
+      ),
     },
   ];
-
-  const insets = useSafeAreaInsets();
-
   return (
-    <>
-      <Badge className="w-32 bg-[#BBC920]">
-        <Text>Output Beam</Text>
-      </Badge>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <Table aria-labelledby="input-beam" style={{ height: 150 }}>
-          <TableHeader>
-            <TableRow>
-              <TableHead style={{ width: MIN_COLUMN_WIDTHS[1] }}>
-                <Text>Waist position(mm)</Text>
-              </TableHead>
-              <TableHead style={{ width: MIN_COLUMN_WIDTHS[1] }}>
-                <Text>Relative position(mm)</Text>
-              </TableHead>
-              <TableHead style={{ width: MIN_COLUMN_WIDTHS[2] }}>
-                <Text>Waist(um)</Text>
-              </TableHead>
-              <TableHead style={{ width: MIN_COLUMN_WIDTHS[3] }}>
-                <Text>Rayleigh range(mm)</Text>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <FlashList
-              data={items}
-              estimatedItemSize={1}
-              contentContainerStyle={{
-                paddingBottom: insets.bottom,
-              }}
-              renderItem={({ item }) => {
-                return (
-                  <TableRow key={item.key}>
-                    <TableCell style={{ width: MIN_COLUMN_WIDTHS[1] }}>
-                      <Text>{item.position}</Text>
-                    </TableCell>
-                    <TableCell style={{ width: MIN_COLUMN_WIDTHS[1] }}>
-                      <Text>{item.relative_position}</Text>
-                    </TableCell>
-                    <TableCell style={{ width: MIN_COLUMN_WIDTHS[2] }}>
-                      <Text>{item.waist}</Text>
-                    </TableCell>
-                    <TableCell style={{ width: MIN_COLUMN_WIDTHS[3] }}>
-                      <Text>{item.rayleigh_range}</Text>
-                    </TableCell>
-                  </TableRow>
-                );
-              }}
-            />
-          </TableBody>
-        </Table>
-      </ScrollView>
-    </>
+    <Table
+      columns={columns}
+      items={items}
+      aria-labelledby="output-beam"
+      rowHeight={50}
+      className="h-32"
+    />
   );
 }

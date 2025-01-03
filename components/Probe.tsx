@@ -1,26 +1,10 @@
-import Input from "~/components/custom-ui/input";
+import Table from "./custom-ui/table";
 
-import { Badge } from "~/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
-import { Text } from "~/components/ui/text";
+import Input from "~/components/custom-ui/input";
+import Text from "~/components/custom-ui/text";
 
 import { RayleighRange } from "~/lib/calculate";
 import { Beam } from "~/lib/types";
-
-import { useState } from "react";
-import { ScrollView } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-import { FlashList } from "@shopify/flash-list";
-
-const MIN_COLUMN_WIDTHS = [120, 120, 100, 120];
 
 export default function Probe({
   probe_position,
@@ -33,53 +17,44 @@ export default function Probe({
   probe_beam: Beam;
   wavelength: number;
 }) {
-  const [display_position, setDisplayPosition] = useState(
-    String(probe_position),
-  );
-
-  function handleChangePosition(value: number) {
-    setProbePosition(value);
-    setDisplayPosition(String(value));
-  }
-
   const columns = [
     {
-      key: "optics",
-      label: "Optics",
-    },
-    {
       key: "position",
-      label: "Position(mm)",
+      label: <Text className="font-bold">Position (mm)</Text>,
+      width: 80,
     },
     {
       key: "beam_radius",
-      label: "Beam radius(um)",
+      label: <Text className="font-bold">Beam Radius (um)</Text>,
+      width: 84,
     },
     {
       key: "beam_curvature",
-      label: "Beam curvature(mm)",
+      label: <Text className="font-bold">Beam Curvature (mm)</Text>,
+      width: 90,
     },
     {
       key: "waist_position",
-      label: "Waist position(mm)",
+      label: <Text className="font-bold">Waist Position (mm)</Text>,
+      width: 84,
     },
     {
       key: "waist",
-      label: "Waist(um)",
+      label: <Text className="font-bold">Waist (um)</Text>,
+      width: 76,
     },
     {
       key: "rayleigh_range",
-      label: "Rayleigh range(mm)",
+      label: <Text className="font-bold">Rayleigh Range (mm)</Text>,
+      width: 90,
     },
   ];
-  const insets = useSafeAreaInsets();
 
   const rayleigh_range = RayleighRange(probe_beam.waist, wavelength);
   const z = probe_position - probe_beam.position;
   const items = [
     {
       key: "probe",
-      optics: "Probe",
       position: (
         <Input
           className="max-w-20 justify-self-center"
@@ -88,79 +63,27 @@ export default function Probe({
         />
       ),
       beam_radius: (
-        probe_beam.waist * Math.sqrt(1 + (z / rayleigh_range) ** 2)
-      ).toFixed(3),
-      beam_curvature: (z * (1 + (rayleigh_range / z) ** 2)).toFixed(3),
-      waist_position: probe_beam.position.toFixed(3),
-      waist: probe_beam.waist.toFixed(3),
-      rayleigh_range: rayleigh_range.toFixed(3),
+        <Text>
+          {(
+            probe_beam.waist * Math.sqrt(1 + (z / rayleigh_range) ** 2)
+          ).toFixed(3)}
+        </Text>
+      ),
+      beam_curvature: (
+        <Text>{(z * (1 + (rayleigh_range / z) ** 2)).toFixed(3)}</Text>
+      ),
+      waist_position: <Text>{probe_beam.position.toFixed(3)}</Text>,
+      waist: <Text>{probe_beam.waist.toFixed(3)}</Text>,
+      rayleigh_range: <Text>{rayleigh_range.toFixed(3)}</Text>,
     },
   ];
 
   return (
-    <>
-      <Badge className="w-32 bg-[#FF7A3D]">
-        <Text>Probe</Text>
-      </Badge>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <Table aria-labelledby="input-beam" style={{ height: 150 }}>
-          <TableHeader>
-            <TableRow>
-              <TableHead style={{ width: MIN_COLUMN_WIDTHS[1] }}>
-                <Text>Position(mm)</Text>
-              </TableHead>
-              <TableHead style={{ width: MIN_COLUMN_WIDTHS[2] }}>
-                <Text>Beam radius(um)</Text>
-              </TableHead>
-              <TableHead style={{ width: MIN_COLUMN_WIDTHS[3] }}>
-                <Text>Beam curvature(mm)</Text>
-              </TableHead>
-              <TableHead style={{ width: MIN_COLUMN_WIDTHS[3] }}>
-                <Text>Waist position(mm)</Text>
-              </TableHead>
-              <TableHead style={{ width: MIN_COLUMN_WIDTHS[3] }}>
-                <Text>Waist(um)</Text>
-              </TableHead>
-              <TableHead style={{ width: MIN_COLUMN_WIDTHS[3] }}>
-                <Text>Rayleigh range(mm)</Text>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <FlashList
-              data={items}
-              estimatedItemSize={75}
-              contentContainerStyle={{
-                paddingBottom: insets.bottom,
-              }}
-              renderItem={({ item }) => {
-                return (
-                  <TableRow key={item.key}>
-                    <TableCell style={{ width: MIN_COLUMN_WIDTHS[1] }}>
-                      {item.position}
-                    </TableCell>
-                    <TableCell style={{ width: MIN_COLUMN_WIDTHS[1] }}>
-                      <Text>{item.beam_radius}</Text>
-                    </TableCell>
-                    <TableCell style={{ width: MIN_COLUMN_WIDTHS[1] }}>
-                      <Text>{item.beam_curvature}</Text>
-                    </TableCell>
-                    <TableCell style={{ width: MIN_COLUMN_WIDTHS[2] }}>
-                      <Text>{item.waist_position}</Text>
-                    </TableCell>
-                    <TableCell style={{ width: MIN_COLUMN_WIDTHS[2] }}>
-                      <Text>{item.waist}</Text>
-                    </TableCell>
-                    <TableCell style={{ width: MIN_COLUMN_WIDTHS[3] }}>
-                      <Text>{item.rayleigh_range}</Text>
-                    </TableCell>
-                  </TableRow>
-                );
-              }}
-            />
-          </TableBody>
-        </Table>
-      </ScrollView>
-    </>
+    <Table
+      columns={columns}
+      items={items}
+      aria-labelledby="probe"
+      className="h-[8.5rem]"
+    />
   );
 }

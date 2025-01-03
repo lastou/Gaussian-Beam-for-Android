@@ -1,25 +1,16 @@
+import Table from "./custom-ui/table";
+
 import Input from "~/components/custom-ui/input";
+import Text from "~/components/custom-ui/text";
 
-import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
-import { Text } from "~/components/ui/text";
 
+import { Add } from "~/lib/icons/Add";
+import { Delete } from "~/lib/icons/Delete";
 import { Lens } from "~/lib/types";
 
-import { useEffect, useState } from "react";
-import { ScrollView } from "react-native";
-
-import { FlashList } from "@shopify/flash-list";
-
-const MIN_COLUMN_WIDTHS = [120, 120, 100, 120];
+import { useState } from "react";
+import { View } from "react-native";
 
 export default function LensTable({
   lenses,
@@ -37,33 +28,38 @@ export default function LensTable({
     setStateKey((state_key + 1) % 2);
   }
 
-  const [num_display, setNumDisplay] = useState(
-    lenses.map((lens) => ({
-      position: String(lens.position),
-      focus: String(lens.focus),
-    })),
-  );
-
   const columns = [
     {
-      key: "optics",
-    },
-    {
       key: "position",
+      label: <Text className="font-bold">Position (mm)</Text>,
+      width: 88,
     },
     {
       key: "relative_position",
+      label: <Text className="font-bold">Relative Position (mm)</Text>,
     },
     {
       key: "focus",
+      label: <Text className="font-bold">Focus (mm)</Text>,
+      width: 80,
     },
     {
       key: "action",
+      label: (
+        <Button
+          variant={"ghost"}
+          onPress={() => handleAddLens()}
+          className="mr-4"
+        >
+          <Add className="stroke-primary" size={23} strokeWidth={1.25} />
+        </Button>
+      ),
+      width: 72,
     },
   ];
   const items = lenses.map((lens, index) => ({
     key: index,
-    optics: "Lens",
+
     position: (
       <Input
         className="max-w-20 justify-self-center"
@@ -74,10 +70,14 @@ export default function LensTable({
         }}
       />
     ),
-    relative_position:
-      index > 0
-        ? lenses[index].position - lenses[index - 1].position
-        : lenses[index].position - input_beam_position,
+    relative_position: (
+      <Text>
+        {(index > 0
+          ? lenses[index].position - lenses[index - 1].position
+          : lenses[index].position - input_beam_position
+        ).toFixed(3)}
+      </Text>
+    ),
     focus: (
       <Input
         className="max-w-20 justify-self-center"
@@ -89,12 +89,11 @@ export default function LensTable({
     ),
     action: (
       <Button
-        className="w-20"
-        variant={"destructive"}
-        size="sm"
+        variant={"ghost"}
         onPress={() => handleDeleteLens(index)}
+        className="mr-3.5"
       >
-        Delete
+        <Delete className="stroke-destructive" size={23} strokeWidth={1.25} />
       </Button>
     ),
   }));
@@ -110,7 +109,6 @@ export default function LensTable({
   function handleDeleteLens(index: number) {
     setLenses(lenses.filter((_, i) => i !== index));
     updateStateKey();
-    // setNumDisplay(num_display.filter((_, i) => i !== index));
   }
 
   function handleChangePosition(index: number, value: number) {
@@ -139,97 +137,22 @@ export default function LensTable({
     );
   }
 
-  function handleChangeDisplayPosition(index: number, value: string) {
-    setNumDisplay(
-      num_display.map((item, i) => {
-        if (i === index) {
-          return { ...item, position: value };
-        }
-        return item;
-      }),
-    );
-  }
-
-  function handleChangeDisplayFocus(index: number, value: string) {
-    setNumDisplay(
-      num_display.map((item, i) => {
-        if (i === index) {
-          return { ...item, focus: value };
-        }
-        return item;
-      }),
-    );
-  }
-
   return (
-    <>
-      <Badge className="w-32 bg-[#23C1ED]">
-        <Text>Lens</Text>
-      </Badge>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <Table aria-labelledby="lenses" style={{ height: 300 }}>
-          <TableHeader>
-            <TableRow>
-              <TableHead style={{ width: MIN_COLUMN_WIDTHS[1] }}>
-                <Text>Position(mm)</Text>
-              </TableHead>
-              <TableHead style={{ width: MIN_COLUMN_WIDTHS[2] }}>
-                <Text>Relative position(mm)</Text>
-              </TableHead>
-              <TableHead style={{ width: MIN_COLUMN_WIDTHS[3] }}>
-                <Text>Focus(mm)</Text>
-              </TableHead>
-              <TableHead style={{ width: MIN_COLUMN_WIDTHS[3] }}>
-                <Button
-                  className="w-20"
-                  variant={"default"}
-                  size="sm"
-                  onPress={() => handleAddLens()}
-                >
-                  <Text>Add lens</Text>
-                </Button>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <FlashList
-              key={state_key}
-              data={items}
-              estimatedItemSize={5}
-              nestedScrollEnabled
-              renderItem={({ item, index }) => {
-                return (
-                  <TableRow>
-                    <TableCell style={{ width: MIN_COLUMN_WIDTHS[1] }}>
-                      {item.position}
-                    </TableCell>
-                    <TableCell style={{ width: MIN_COLUMN_WIDTHS[2] }}>
-                      <Text>
-                        {index > 0
-                          ? lenses[index].position - lenses[index - 1].position
-                          : lenses[index].position - input_beam_position}
-                      </Text>
-                    </TableCell>
-                    <TableCell style={{ width: MIN_COLUMN_WIDTHS[3] }}>
-                      {item.focus}
-                    </TableCell>
-                    <TableCell style={{ width: MIN_COLUMN_WIDTHS[3] }}>
-                      <Button
-                        className="w-20"
-                        variant={"destructive"}
-                        size="sm"
-                        onPress={() => handleDeleteLens(index)}
-                      >
-                        <Text>Delete</Text>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              }}
-            />
-          </TableBody>
-        </Table>
-      </ScrollView>
-    </>
+    <Table
+      columns={columns}
+      items={items}
+      aria-labelledby="lenses"
+      className="h-64"
+      state_key={state_key}
+      flashListProps={{
+        nestedScrollEnabled: true,
+        ItemSeparatorComponent: () => <View className="h-0.5 bg-slate-100" />,
+        ListEmptyComponent: (
+          <View className="h-44 justify-center">
+            <Text className="text-xl">No Lens</Text>
+          </View>
+        ),
+      }}
+    />
   );
 }
