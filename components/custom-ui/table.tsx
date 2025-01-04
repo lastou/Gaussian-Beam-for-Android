@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 
-import { ScrollView } from "react-native";
+import { DimensionValue } from "react-native";
 
 import { FlashList } from "@shopify/flash-list";
 
@@ -20,7 +20,7 @@ export default function Table({
   flashListProps,
   ...props
 }: {
-  columns: { key: string; label: any; width?: number }[];
+  columns: { key: string; label: any; width?: string | number }[];
   items: { [key: string]: any }[];
   rowHeight?: number;
   className?: string;
@@ -29,51 +29,45 @@ export default function Table({
   [key: string]: any;
 }) {
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      className={`border rounded-xl border-slate-200 ${className}`}
-    >
-      <TableRNR className="px-2 pt-2 rounded-xl" {...props}>
-        <TableHeader>
-          <TableRow className="items-center h-14 rounded-md bg-slate-100 border-0">
-            {columns.map((column) => (
-              <TableHead
-                key={column.key}
-                style={{ width: column.width || 100 }}
+    <TableRNR className={`px-2 pt-2 rounded-xl ${className}`} {...props}>
+      <TableHeader>
+        <TableRow className="items-center h-14 rounded-md bg-slate-100 border-0">
+          {columns.map((column) => (
+            <TableHead
+              key={column.key}
+              style={{ width: (column.width as DimensionValue) || 100 }}
+            >
+              {column.label}
+            </TableHead>
+          ))}
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <FlashList
+          data={items}
+          estimatedItemSize={50}
+          key={state_key}
+          renderItem={({ item }) => {
+            return (
+              <TableRow
+                key={item.key}
+                className="items-center border-0"
+                style={{ height: rowHeight || 64 }}
               >
-                {column.label}
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <FlashList
-            data={items}
-            estimatedItemSize={50}
-            key={state_key}
-            renderItem={({ item }) => {
-              return (
-                <TableRow
-                  key={item.key}
-                  className="items-center border-0"
-                  style={{ height: rowHeight || 60 }}
-                >
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.key}
-                      style={{ width: column.width || 100 }}
-                    >
-                      {item[column.key]}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              );
-            }}
-            {...flashListProps}
-          />
-        </TableBody>
-      </TableRNR>
-    </ScrollView>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.key}
+                    style={{ width: (column.width as DimensionValue) || 100 }}
+                  >
+                    {item[column.key]}
+                  </TableCell>
+                ))}
+              </TableRow>
+            );
+          }}
+          {...flashListProps}
+        />
+      </TableBody>
+    </TableRNR>
   );
 }

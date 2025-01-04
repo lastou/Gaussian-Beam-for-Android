@@ -30,7 +30,7 @@ export default function GaussianBeamCalculator() {
   }
 
   return (
-    <ScrollView bounces={false} showsHorizontalScrollIndicator={false}>
+    <ScrollView>
       <KeyboardAvoidingView className="px-0.5 py-3 gap-y-6">
         <View>
           <Badge className={"bg-[#45CC43]"}>

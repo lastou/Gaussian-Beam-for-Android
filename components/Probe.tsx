@@ -6,6 +6,8 @@ import Text from "~/components/custom-ui/text";
 import { RayleighRange } from "~/lib/calculate";
 import { Beam } from "~/lib/types";
 
+import { ScrollView } from "react-native";
+
 export default function Probe({
   probe_position,
   setProbePosition,
@@ -34,14 +36,14 @@ export default function Probe({
       width: 90,
     },
     {
-      key: "waist_position",
-      label: <Text className="font-bold">Waist Position (mm)</Text>,
-      width: 84,
-    },
-    {
       key: "waist",
       label: <Text className="font-bold">Waist (um)</Text>,
       width: 76,
+    },
+    {
+      key: "waist_position",
+      label: <Text className="font-bold">Waist Position (mm)</Text>,
+      width: 84,
     },
     {
       key: "rayleigh_range",
@@ -72,18 +74,24 @@ export default function Probe({
       beam_curvature: (
         <Text>{(z * (1 + (rayleigh_range / z) ** 2)).toFixed(3)}</Text>
       ),
-      waist_position: <Text>{probe_beam.position.toFixed(3)}</Text>,
       waist: <Text>{probe_beam.waist.toFixed(3)}</Text>,
+      waist_position: <Text>{probe_beam.position.toFixed(3)}</Text>,
       rayleigh_range: <Text>{rayleigh_range.toFixed(3)}</Text>,
     },
   ];
 
   return (
-    <Table
-      columns={columns}
-      items={items}
-      aria-labelledby="probe"
-      className="h-[8.5rem]"
-    />
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      className="border rounded-xl border-slate-200"
+    >
+      <Table
+        columns={columns}
+        items={items}
+        aria-labelledby="probe"
+        className="h-[8.5rem]"
+      />
+    </ScrollView>
   );
 }

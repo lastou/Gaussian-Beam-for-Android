@@ -5,6 +5,8 @@ import Text from "~/components/custom-ui/text";
 import { RayleighRange } from "~/lib/calculate";
 import { Beam } from "~/lib/types";
 
+import { View } from "react-native";
+
 export default function OutputBeam({
   output_beam,
   wavelength,
@@ -18,23 +20,23 @@ export default function OutputBeam({
     {
       key: "waist",
       label: <Text className="font-bold">Waist (um)</Text>,
-      width: 76,
+      width: "22%",
     },
     {
       key: "position",
       label: <Text className="font-bold">Waist Position (mm)</Text>,
-      width: 84,
+      width: "25%",
     },
     {
       key: "relative_position",
       label: <Text className="font-bold">Relative Position (mm)</Text>,
-      width: 90,
+      width: "27%",
     },
 
     {
       key: "rayleigh_range",
       label: <Text className="font-bold">Rayleigh Range (mm)</Text>,
-      width: 90,
+      width: "26%",
     },
   ];
 
@@ -52,12 +54,14 @@ export default function OutputBeam({
     },
   ];
   return (
-    <Table
-      columns={columns}
-      items={items}
-      aria-labelledby="output-beam"
-      rowHeight={50}
-      className="h-32"
-    />
+    <View className="border rounded-xl border-slate-200">
+      <Table
+        columns={columns}
+        items={items}
+        aria-labelledby="output-beam"
+        rowHeight={56}
+        className="h-32"
+      />
+    </View>
   );
 }

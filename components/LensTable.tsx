@@ -32,16 +32,17 @@ export default function LensTable({
     {
       key: "position",
       label: <Text className="font-bold">Position (mm)</Text>,
-      width: 88,
+      width: "26%",
     },
     {
       key: "relative_position",
       label: <Text className="font-bold">Relative Position (mm)</Text>,
+      width: "29%",
     },
     {
       key: "focus",
       label: <Text className="font-bold">Focus (mm)</Text>,
-      width: 80,
+      width: "24%",
     },
     {
       key: "action",
@@ -54,7 +55,7 @@ export default function LensTable({
           <Add className="stroke-primary" size={23} strokeWidth={1.25} />
         </Button>
       ),
-      width: 72,
+      width: "21%",
     },
   ];
   const items = lenses.map((lens, index) => ({
@@ -138,21 +139,23 @@ export default function LensTable({
   }
 
   return (
-    <Table
-      columns={columns}
-      items={items}
-      aria-labelledby="lenses"
-      className="h-64"
-      state_key={state_key}
-      flashListProps={{
-        nestedScrollEnabled: true,
-        ItemSeparatorComponent: () => <View className="h-0.5 bg-slate-100" />,
-        ListEmptyComponent: (
-          <View className="h-44 justify-center">
-            <Text className="text-xl">No Lens</Text>
-          </View>
-        ),
-      }}
-    />
+    <View className="border rounded-xl border-slate-200">
+      <Table
+        columns={columns}
+        items={items}
+        aria-labelledby="lenses"
+        className="h-64"
+        state_key={state_key}
+        flashListProps={{
+          nestedScrollEnabled: true,
+          ItemSeparatorComponent: () => <View className="h-0.5 bg-slate-100" />,
+          ListEmptyComponent: (
+            <View className="h-44 justify-center">
+              <Text className="text-xl">No Lens</Text>
+            </View>
+          ),
+        }}
+      />
+    </View>
   );
 }

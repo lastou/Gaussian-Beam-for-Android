@@ -2,16 +2,20 @@
   "expo": {
     "name": "Gaussian Beam",
     "slug": "gaussian-beam",
-    "version": "0.1",
-    "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "version": "0.2",
+    "orientation": "portrait",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "assetBundlePatterns": [
       "**/*"
     ],
     "android": {
-      "package": "com.ui.beam"
+      "package": "com.ui.beam",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#ffffff"
+      }
     },
     "plugins": [
       "expo-router",
