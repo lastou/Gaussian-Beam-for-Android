@@ -26,7 +26,7 @@
     "@shopify/flash-list": "1.7.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
-    "expo": "^52.0.7",
+    "expo": "^52.0.23",
     "expo-dev-client": "~5.0.8",
     "expo-linking": "~7.0.2",
     "expo-navigation-bar": "~4.0.3",

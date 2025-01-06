@@ -13,11 +13,12 @@ import { Lens } from "~/lib/types";
 import { useState } from "react";
 import { KeyboardAvoidingView, ScrollView, View } from "react-native";
 
+const DEFAULT_LENS = { position: 50, focus: 50 };
+
 export default function GaussianBeamCalculator() {
   const [wavelength, setWavelength] = useState(1064);
   const [input_beam, setInputBeam] = useState({ position: 0, waist: 50 });
   const [lenses, setLenses] = useState<Lens[]>([]);
-  const default_lens = { position: 50, focus: 50 };
   const [probe_position, setProbePosition] = useState(0);
 
   let output_beam = input_beam;
@@ -31,7 +32,7 @@ export default function GaussianBeamCalculator() {
 
   return (
     <ScrollView>
-      <KeyboardAvoidingView className="px-0.5 py-3 gap-y-6">
+      <KeyboardAvoidingView className="px-0.5 py-4 gap-y-6">
         <View>
           <Badge className={"bg-[#45CC43]"}>
             <Text>Input Beam</Text>
@@ -52,7 +53,7 @@ export default function GaussianBeamCalculator() {
             lenses={lenses}
             setLenses={setLenses}
             input_beam_position={input_beam.position}
-            default_lens={default_lens}
+            default_lens={DEFAULT_LENS}
           />
         </View>
 

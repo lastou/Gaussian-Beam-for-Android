@@ -23,32 +23,26 @@ export default function Probe({
     {
       key: "position",
       label: <Text className="font-bold">Position (mm)</Text>,
-      width: 80,
     },
     {
       key: "beam_radius",
       label: <Text className="font-bold">Beam Radius (um)</Text>,
-      width: 84,
     },
     {
       key: "beam_curvature",
       label: <Text className="font-bold">Beam Curvature (mm)</Text>,
-      width: 90,
     },
     {
       key: "waist",
       label: <Text className="font-bold">Waist (um)</Text>,
-      width: 76,
     },
     {
       key: "waist_position",
       label: <Text className="font-bold">Waist Position (mm)</Text>,
-      width: 84,
     },
     {
       key: "rayleigh_range",
       label: <Text className="font-bold">Rayleigh Range (mm)</Text>,
-      width: 90,
     },
   ];
 
@@ -90,7 +84,7 @@ export default function Probe({
         columns={columns}
         items={items}
         aria-labelledby="probe"
-        className="h-[8.5rem]"
+        className="h-[120px]"
       />
     </ScrollView>
   );

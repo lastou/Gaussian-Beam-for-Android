@@ -1,32 +1,18 @@
-import { SplashScreen, Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
+import { Stack } from "expo-router";
 import "~/global.css";
 
-import { ThemeToggle } from "~/components/ThemeToggle";
-
-import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
-import { NAV_THEME } from "~/lib/constants";
-import { useColorScheme } from "~/lib/useColorScheme";
-
-import * as React from "react";
-import { Platform } from "react-native";
-
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  DarkTheme,
-  DefaultTheme,
-  Theme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { PortalHost } from "@rn-primitives/portal";
+import { DefaultTheme, Theme, ThemeProvider } from "@react-navigation/native";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
-  colors: NAV_THEME.light,
-};
-const DARK_THEME: Theme = {
-  ...DarkTheme,
-  colors: NAV_THEME.dark,
+  colors: {
+    background: "hsl(0 0% 100%)", // background
+    border: "hsl(240 5.9% 90%)", // border
+    card: "hsl(0 0% 100%)", // card
+    notification: "hsl(0 84.2% 60.2%)", // destructive
+    primary: "hsl(240 5.9% 10%)", // primary
+    text: "hsl(240 10% 3.9%)", // foreground
+  },
 };
 
 export {
@@ -34,56 +20,18 @@ export {
   ErrorBoundary,
 } from "expo-router";
 
-// Prevent the splash screen from auto-hiding before getting the color scheme.
-SplashScreen.preventAutoHideAsync();
-
 export default function RootLayout() {
-  const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
-  const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
-
-  React.useEffect(() => {
-    (async () => {
-      const theme = await AsyncStorage.getItem("theme");
-      if (Platform.OS === "web") {
-        // Adds the background color to the html element to prevent white background on overscroll.
-        document.documentElement.classList.add("bg-background");
-      }
-      if (!theme) {
-        AsyncStorage.setItem("theme", colorScheme);
-        setIsColorSchemeLoaded(true);
-        return;
-      }
-      const colorTheme = theme === "dark" ? "dark" : "light";
-      if (colorTheme !== colorScheme) {
-        setColorScheme(colorTheme);
-        setAndroidNavigationBar(colorTheme);
-        setIsColorSchemeLoaded(true);
-        return;
-      }
-      setAndroidNavigationBar(colorTheme);
-      setIsColorSchemeLoaded(true);
-    })().finally(() => {
-      SplashScreen.hideAsync();
-    });
-  }, []);
-
-  if (!isColorSchemeLoaded) {
-    return null;
-  }
-
   return (
-    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+    <ThemeProvider value={LIGHT_THEME}>
       <Stack>
         <Stack.Screen
           name="index"
           options={{
-            title: "Gaussian Beam",
-            headerRight: () => <ThemeToggle />,
+            title: "Gaussian Beam for Android",
+            headerShown: true,
           }}
         />
       </Stack>
-      <PortalHost />
     </ThemeProvider>
   );
 }

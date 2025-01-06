@@ -77,7 +77,7 @@ export default function InputBeam({
         columns={columns}
         items={items}
         aria-labelledby="input-beam"
-        className="h-[8.5rem]"
+        className="h-[120px]"
       />
     </View>
   );

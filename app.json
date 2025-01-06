@@ -3,7 +3,7 @@
     "name": "Gaussian Beam",
     "slug": "gaussian-beam",
     "icon": "./assets/icon.png",
-    "version": "0.2",
+    "version": "0.3",
     "orientation": "portrait",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -13,7 +13,7 @@
     "android": {
       "package": "com.ui.beam",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
@@ -23,7 +23,7 @@
         "expo-splash-screen",
         {
           "image": "./assets/splash.png",
-          "imageWidth": 200
+          "imageWidth": 192
         }
       ]
     ],
