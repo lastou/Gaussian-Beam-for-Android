@@ -21,7 +21,12 @@ export default function Input({
   }
   function handleChangeValue(v: number) {
     // if value is the same as previous, don't update
-    if (v === value_prev) return;
+    if (v === value_prev) {
+      if (value_disp == "") {
+        setValueDisp("0");
+      }
+      return;
+    }
 
     // update real value
     setValue(v);

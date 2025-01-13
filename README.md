@@ -1,38 +1,51 @@
 # Gaussian Beam for Android
 
+## Screenshot
+
 ## Development
 
-### Build APK
+### How to Build
 
-1. `npx expo prebuild --clean`
+1. follow [Expo Docs](https://docs.expo.dev/get-started/set-up-your-environment/?mode=development-build\&buildEnv=local) to set up your environment
 
-2. follow the instruction to sign the app using your own key
-    https://docs.expo.dev/guides/local-app-production/
+2. install dependencies
 
-3. `cd android && ./gradlew assembleRelease`
-    https://stackoverflow.com/questions/35935060/how-can-i-generate-an-apk-that-can-run-without-server-with-react-native/46170797#46170797
+   ```bash
+   npm install
+   ```
+
+3. run this command to generate the native directory `android`
+
+   ```bash
+   npx expo prebuild --platform android --clean
+   ```
+
+4. follow [the instructions frmom Expo Docs](https://docs.expo.dev/guides/local-app-production/) to sign this app using your keystore
+   * copy your keystore file to the directory `android/app`
+   * edit the file `android/gradle.properties`
+   * edit the file `android/app/build.gradle`
+
+5. cd to the directory `android` and generate the APK file
+
+   ```bash
+   cd android
+   ./gradlew assembleRelease
+   ```
 
 ### Useful Commands
 
-[Tools for development](https://docs.expo.dev/develop/tools/)
-> `npx expo-doctor`  
-> `npx expo install package-name`  
-> `npx expo run:android`  
-> `npx expo prebuild --clean`
+see [Tools for development](https://docs.expo.dev/develop/tools/)
 
-```
-npx react-native doctor
-```
+* `npx expo-doctor`
+* `npx expo install package-name`
+* `npx expo run:android`
 
-###  Trouble Shooting
+### Trouble Shooting
 
-- react-native doctor can't locale Android SDK
+* [react-native doctor can't locale Android SDK](https://stackoverflow.com/questions/62797240/reactnative-cant-locate-android-sdk)
 
-    https://stackoverflow.com/questions/62797240/reactnative-cant-locate-android-sdk
-    > make sure that the Android SDK Command-line Tools (latest) was installed in the Android Studio Settings.
+  Make sure that the Android SDK Command-line Tools (latest) was installed in the Android Studio Settings.
 
-- Execution failed for task ':react-native-reanimated:configureCMakeDebug[arm64-v8a]'
-    https://stackoverflow.com/questions/73904485/task-react-native-reanimatedconfigurecmakedebugarm64-v8a-failed
-    > NDK has a limited number of path characters
+* [Execution failed for task ':react-native-reanimated:configureCMakeDebug\[arm64-v8a\]'](https://stackoverflow.com/questions/73904485/task-react-native-reanimatedconfigurecmakedebugarm64-v8a-failed)
 
-    Move the project to a shorter directory, for example, directly under `C:\`
+  This happens because NDK has a limited number of path characters. Try to move this project to a directory with a shorter path, for example, directly under `C:\`

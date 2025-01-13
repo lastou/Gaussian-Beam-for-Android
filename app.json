@@ -3,7 +3,7 @@
     "name": "Gaussian Beam",
     "slug": "gaussian-beam",
     "icon": "./assets/icon.png",
-    "version": "0.3",
+    "version": "0.4",
     "orientation": "portrait",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -17,6 +17,9 @@
         "backgroundColor": "#ffffff"
       }
     },
+    "ios": {
+      "bundleIdentifier": "com.ui.beam"
+    },
     "plugins": [
       "expo-router",
       [
@@ -24,6 +27,22 @@
         {
           "image": "./assets/splash.png",
           "imageWidth": 192
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "useLegacyPackaging": true,
+            "extraMavenRepos": [
+              "https://maven.aliyun.com/repository/public",
+              "https://maven.aliyun.com/repository/google",
+              "https://maven.aliyun.com/repository/gradle-plugin"
+            ]
+          },
+          "ios": {}
         }
       ]
     ],
