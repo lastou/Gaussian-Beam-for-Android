@@ -2,6 +2,9 @@
 
 ## Screenshot
 
+<img src="https://github.com/user-attachments/assets/17358f3e-8878-48fd-a0c0-f69782cca152" alt="Image 1" width="32%"/>
+<img src="https://github.com/user-attachments/assets/ca616797-e629-45be-b282-286e88f4a342" alt="Image 2" width="32%"/>
+
 ## Development
 
 ### How to Build
